@@ -1,4 +1,4 @@
-## GreenHand Community
+## Green Hand Community
 
 ## Resource
 https://spring.io/guides
