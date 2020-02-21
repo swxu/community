@@ -10,3 +10,10 @@
 
 ## Tool
 - Git
+- Meavn
+
+## Objectives
+- MVC Framework
+- UI - Bootstrap
+- database for logging in
+- bug/log tracker
