@@ -5,6 +5,8 @@
 - [Spring Web Guides](https://spring.io/guides/gs/serving-web-content)
 - [ElasticSearch Community](https://elasticsearch.cn/explore)
 - [Bootstrap Document](https://v3.bootcss.com/getting-started/)
+-[Spring boot - Mybatis](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)
+
 ### Github login
 - [Github OAuth App](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)
 
