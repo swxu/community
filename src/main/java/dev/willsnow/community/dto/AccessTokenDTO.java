@@ -1,7 +1,7 @@
 package dev.willsnow.community.dto;
 
 /**
- * Access token data transfer object
+ * Access token data transfer object in network.
  *
  * @author will
  */
