@@ -32,6 +32,9 @@
                 <button type="submit" class="btn btn-default">Search</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user != null}">
+                    <a href="/publish">Publish</a>
+                </li>
                 <li class="dropdown" th:if="${session.user != null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="false" th:text="${session.user.getName()}"><span
@@ -59,22 +62,27 @@
                       style="font-weight: bold"> Publish</span>
             </h2>
             <hr>
-            <form action="">
+            <form action="/publish" method="post">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Title of post...">
+                    <input type="text" class="form-control" id="title" name="title"
+                           th:value="${title}"
+                           placeholder="Title of post...">
                 </div>
                 <div class="form-group">
-                    <label for="content">Content</label>
-                    <textarea name="content" id="content" class="form-control" cols="30" rows="10"
+                    <label for="description">Description</label>
+                    <textarea name="description" class="form-control" id="description" cols="30" rows="10"
+                              th:text="${description}"
                               placeholder="Start from here ..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="tag">Tag</label>
                     <input type="text" class="form-control" id="tag" name="tag"
+                           th:value="${tag}"
                            placeholder="Tag for post, split by ','.">
                 </div>
                 <div>
+                    <div class="alert alert-danger" th:if="${error} != null" th:text="${error}"></div>
                     <button type="submit" class="btn btn-primary btn-publish">Publish</button>
                 </div>
             </form>
