@@ -11,7 +11,7 @@
 ### Github login
 - [Github OAuth App](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)
 - [Flyway database migration](https://flywaydb.org/getstarted/firststeps/maven)
-
+- [Lombok](https://projectlombok.org/)
 
 ## Tool
 - Git
