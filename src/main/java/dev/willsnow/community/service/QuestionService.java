@@ -1,5 +1,6 @@
 package dev.willsnow.community.service;
 
+import dev.willsnow.community.dto.PaginationDTO;
 import dev.willsnow.community.dto.QuestionDTO;
 import dev.willsnow.community.mapper.QuestionMapper;
 import dev.willsnow.community.mapper.UserMapper;
@@ -25,9 +26,16 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public List<QuestionDTO> list() {
-        List<Question> questions = questionMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+        Integer totalCount = questionMapper.count();
+        Integer totalPage = (totalCount % size == 0) ? (totalCount / size) : ((totalCount / size) + 1);
+        // handle exception
+        page = (page < 1) ? 1 : ((page > totalPage) ? totalPage : page);
+
+        Integer offset = size * (page - 1);
+        List<Question> questions = questionMapper.list(size, offset);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+        PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question : questions) {
             User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -35,6 +43,9 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        return questionDTOList;
+        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setPagination(totalCount, page, size);
+        return paginationDTO;
     }
 }
+
