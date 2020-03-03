@@ -22,8 +22,8 @@ public class PaginationDTO {
     private List<Integer> pages;
     private Integer totalPage;
 
-    public void setPagination(Integer totalCount, Integer page, Integer size) {
-        totalPage = (totalCount % size == 0) ? (totalCount / size) : ((totalCount / size) + 1);
+    public void setPagination(Integer totalPage, Integer page) {
+        this.totalPage = totalPage;
         this.page = page;
         pages = new LinkedList<>();
         pages.add(page);
