@@ -59,7 +59,7 @@
                         </a>
                     </li>
                     <li th:if="${pagination.showEndPage}">
-                        <a th:href="@{/profile/questions/(page=${pagination.totalPage})}" aria-label="Next">
+                        <a th:href="@{/profile/{section}/(page=${pagination.totalPage}, section=${section})}" aria-label="Next">
                             <span aria-hidden="true">&gt;&gt;</span>
                         </a>
                 </ul>
