@@ -1,5 +1,6 @@
 package dev.willsnow.community.mapper;
 
+import dev.willsnow.community.dto.QuestionDTO;
 import dev.willsnow.community.model.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,4 +30,7 @@ public interface QuestionMapper {
 
     @Select("select count(1) from question where creator=#{userId}")
     Integer countByUserId(@Param("userId") Integer userId);
+
+    @Select("select * from question where id=#{id}")
+    Question getById(@Param("id") Integer id);
 }
