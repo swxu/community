@@ -24,7 +24,7 @@ mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ## Tool
 - Git
 - Meavn
-
+- Postman (chrome plugin - tabbed postman)
 
 ## Objectives
 - MVC Framework
