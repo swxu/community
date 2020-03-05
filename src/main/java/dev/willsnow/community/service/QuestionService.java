@@ -2,6 +2,9 @@ package dev.willsnow.community.service;
 
 import dev.willsnow.community.dto.PaginationDTO;
 import dev.willsnow.community.dto.QuestionDTO;
+import dev.willsnow.community.exception.CustomErrorCode;
+import dev.willsnow.community.exception.CustomException;
+import dev.willsnow.community.mapper.QuestionExtMapper;
 import dev.willsnow.community.mapper.QuestionMapper;
 import dev.willsnow.community.mapper.UserMapper;
 import dev.willsnow.community.model.Question;
@@ -27,6 +30,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
         Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
@@ -86,6 +92,11 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+
+        if (question == null) {
+            throw new CustomException(CustomErrorCode.QUESTION_NOT_FOUND);
+        }
+
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
 
@@ -96,7 +107,8 @@ public class QuestionService {
     }
 
     public void createOrUpdate(Question question) {
-        if (question.getId() == 0) { // It means id is null
+        // It means id is null
+        if (question.getId() == 0) {
             // create
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
@@ -112,7 +124,19 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, example);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, example);
+
+            // 更新时，问题可能已经不存在了，因此需要抛异常
+            if (updated != 1) {
+                throw new CustomException(CustomErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
