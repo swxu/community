@@ -8,8 +8,10 @@ import dev.willsnow.community.mapper.QuestionExtMapper;
 import dev.willsnow.community.mapper.QuestionMapper;
 import dev.willsnow.community.model.Comment;
 import dev.willsnow.community.model.Question;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author will
@@ -27,7 +29,8 @@ public class CommentService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public void insert(Comment comment) {
+    @Transactional
+    public void insert(@NotNull Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomException(CustomErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -39,7 +42,6 @@ public class CommentService {
         if (comment.getType().equals(CommentTypeEnum.COMMENT.getType())) {
             /* 回复评论 */
 
-            // 判断该评论所在问题是否有评论
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if (dbComment == null) {
                 throw new CustomException(CustomErrorCode.COMMENT_NOT_FOUND);
