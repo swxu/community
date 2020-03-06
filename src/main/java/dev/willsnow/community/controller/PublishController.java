@@ -27,7 +27,7 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish/{id}") // 通过 @PathVariable 拿到「id」
-    public String edit(@PathVariable(name = "id") Integer id,
+    public String edit(@PathVariable(name = "id") Long id,
                        Model model) {
         QuestionDTO question =  questionService.getById(id);
 
@@ -49,7 +49,7 @@ public class PublishController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "tag", required = false) String tag,
-            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "id", required = false) Long id,
             HttpServletRequest request,
             Model model) {
 
@@ -76,7 +76,7 @@ public class PublishController {
 
         if (user == null) {
             model.addAttribute("error", "Please login your account.");
-            return "publish";
+            return "/publish";
         }
 
         Question question = new Question();
@@ -84,6 +84,7 @@ public class PublishController {
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
+        // Id may be null, and null id will be processed in questionService
         question.setId(id);
 
         questionService.createOrUpdate(question);

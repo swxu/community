@@ -1,10 +1,13 @@
 package dev.willsnow.community.advice;
 
+import dev.willsnow.community.dto.ResultDTO;
+import dev.willsnow.community.exception.CustomErrorCode;
 import dev.willsnow.community.exception.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,23 +22,29 @@ import javax.servlet.http.HttpServletRequest;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    ModelAndView handle(Throwable e, Model model) {
-        if (e instanceof CustomException) {
-            model.addAttribute("message", e.getMessage());
+    @ResponseBody
+    Object handle(Throwable e, Model model, HttpServletRequest request) {
+
+        String contentType = request.getContentType();
+        if ("application/json".equals(contentType)) {
+            // return json data
+
+            if (e instanceof CustomException) {
+                return ResultDTO.errorOf((CustomException) e);
+            } else {
+                return ResultDTO.errorOf(CustomErrorCode.SYS_ERROR);
+            }
         } else {
-            model.addAttribute("message", "Default: servers burnt down ...");
+            // redirect to error page
+
+            if (e instanceof CustomException) {
+                model.addAttribute("message", e.getMessage());
+            } else {
+                model.addAttribute("message", CustomErrorCode.SYS_ERROR.getMessage());
+            }
+            return new ModelAndView("error");
         }
 
-        return new ModelAndView("error");
     }
-
-    private HttpStatus getStatus(HttpServletRequest request) {
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        if (statusCode == null) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return HttpStatus.valueOf(statusCode);
-    }
-
 
 }
