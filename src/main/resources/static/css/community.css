@@ -17,6 +17,11 @@ body {
     height: 40px;
 }
 
+.comment {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .text-desc {
     font-size: 12px;
     font-weight: normal;
