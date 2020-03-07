@@ -25,7 +25,7 @@
                 <span class="text-desc">
                     <span th:text="${question.user.name}"></span> •
                     <span th:text="${question.viewCount}"></span> 阅读数 •
-                    <span th:text="${#dates.format(question.gmtCreate, 'MM-dd-yyyy')}"></span>
+                    <span th:text="${#dates.format(question.gmtCreate, 'MM-dd-yyyy HH:mm')}"></span>
                 </span>
                 <hr>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.description}"></div>
@@ -39,29 +39,30 @@
 
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-            <!--回复列表显示区域-->
             <h3>
                 <span th:text="${question.commentCount}"></span> 个回复
             </h3>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <!--回复列表显示区域-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment : ${comments}">
                 <div class="media">
                     <div class="media-left">
                         <a href="#">
                             <img class="media-object img-rounded"
-                                 th:src="${question.user.avatarUrl}">
+                                 th:src="${comment.user.avatarUrl}">
                         </a>
                     </div>
                     <div class="media-body">
                         <h4 class="media-heading">
-                            <span th:text="${question.user.name}"></span>
+                            <span th:text="${comment.user.name}"></span>
                         </h4>
-                        <div>回复内容</div>
+                        <div th:text="${comment.content}"></div>
                         <div class="menu">
                             <span class="glyphicon glyphicon-thumbs-up icon"></span>
                             <span class="glyphicon glyphicon-comment icon"></span>
                             <span class="pull-right"
-                                  th:text="${#dates.format(question.gmtCreate, 'MM-dd-yyyy')}"></span>
+                                  th:text="${#dates.format(comment.gmtCreate, 'MM-dd HH:mm')}"></span>
                         </div>
                     </div>
                 </div>
