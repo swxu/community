@@ -1,7 +1,9 @@
 package dev.willsnow.community.controller;
 
 import dev.willsnow.community.dto.CommentCreateDTO;
+import dev.willsnow.community.dto.CommentDTO;
 import dev.willsnow.community.dto.ResultDTO;
+import dev.willsnow.community.enums.CommentTypeEnum;
 import dev.willsnow.community.exception.CustomErrorCode;
 import dev.willsnow.community.model.Comment;
 import dev.willsnow.community.model.User;
@@ -9,12 +11,10 @@ import dev.willsnow.community.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author will
@@ -51,5 +51,12 @@ public class CommentController {
         commentService.insert(comment);
 
         return ResultDTO.okOf();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id) {
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
     }
 }
