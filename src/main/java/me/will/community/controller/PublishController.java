@@ -1,5 +1,6 @@
 package me.will.community.controller;
 
+import me.will.community.cache.TagCache;
 import me.will.community.dto.QuestionDTO;
 import me.will.community.model.Question;
 import me.will.community.model.User;
@@ -35,11 +36,14 @@ public class PublishController {
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id", question.getId());
 
+        model.addAttribute("tags", TagCache.get());
+
         return "publish";
     }
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -56,6 +60,15 @@ public class PublishController {
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
 
+        model.addAttribute("tags", TagCache.get());
+
+        // 验证用户是否登录
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            model.addAttribute("error", "Please login your account.");
+            return "/publish";
+        }
+
         if (title == null || "".equals(title)) {
             model.addAttribute("error", "Title shouldn't be empty.");
             return "/publish";
@@ -71,18 +84,18 @@ public class PublishController {
             return "/publish";
         }
 
-        User user = (User) request.getSession().getAttribute("user");
+        // 替换中文逗号
+        tag = StringUtils.replace(tag, "，", ",");
 
-        if (user == null) {
-            model.addAttribute("error", "Please login your account.");
-            return "/publish";
+        String invalid = TagCache.filterValid(tag);
+        if (StringUtils.isNotBlank(invalid)) {
+            model.addAttribute("error", "输入非法标签: " + invalid);
+            return "publish";
         }
 
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
-        // 替换中文逗号
-        StringUtils.replace(tag, "，", ",");
         question.setTag(tag);
         question.setCreator(user.getId());
         // Id may be null, and null id will be processed in questionService
