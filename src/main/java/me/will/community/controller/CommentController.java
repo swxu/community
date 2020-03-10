@@ -49,7 +49,7 @@ public class CommentController {
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
         comment.setCommentCount(0);
-        commentService.insert(comment);
+        commentService.insert(comment, user);
 
         return ResultDTO.okOf();
     }
@@ -60,4 +60,6 @@ public class CommentController {
         List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.COMMENT);
         return ResultDTO.okOf(commentDTOS);
     }
+
 }
+

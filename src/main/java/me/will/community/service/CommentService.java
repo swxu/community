@@ -2,6 +2,8 @@ package me.will.community.service;
 
 import me.will.community.dto.CommentDTO;
 import me.will.community.enums.CommentTypeEnum;
+import me.will.community.enums.NotificationStatusEnum;
+import me.will.community.enums.NotificationTypeEnum;
 import me.will.community.exception.CustomErrorCode;
 import me.will.community.exception.CustomException;
 import me.will.community.mapper.*;
@@ -39,8 +41,11 @@ public class CommentService {
     @Autowired
     private CommentExtMapper commentExtMapper;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomException(CustomErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -56,6 +61,13 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomException(CustomErrorCode.COMMENT_NOT_FOUND);
             }
+
+            // 回复的问题
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomException(CustomErrorCode.QUESTION_NOT_FOUND);
+            }
+
             commentMapper.insert(comment);
 
             // 增加评论的回复数
@@ -63,19 +75,55 @@ public class CommentService {
             parentComment.setId(comment.getParentId());
             parentComment.setCommentCount(1);
             commentExtMapper.incCommentCount(parentComment);
+
+            // 创建通知
+            createNotification(comment,
+                    dbComment.getCommentator(),
+                    commentator.getName(),
+                    question.getId(), question.getTitle(),
+                    NotificationTypeEnum.REPLY_COMMENT);
         } else {
-            /* 评论问题 */
+            /* 回复问题 */
 
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (question == null) {
                 throw new CustomException(CustomErrorCode.QUESTION_NOT_FOUND);
             }
+            comment.setCommentCount(0);
             commentMapper.insert(comment);
             // 该问题的评论数增加1
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
+
+            // 创建通知
+            createNotification(comment,
+                    question.getCreator(),
+                    commentator.getName(),
+                    question.getId(), question.getTitle(),
+                    NotificationTypeEnum.REPLY_QUESTION);
         }
 
+    }
+
+    private void createNotification(Comment comment,
+                                    Long receiver,
+                                    String notifierName,
+                                    Long outerId, String outerTitle,
+                                    NotificationTypeEnum notificationType) {
+//        if (receiver.equals(comment.getCommentator())) {
+//            return;
+//        }
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(notificationType.getType());
+        notification.setReceiver(receiver);
+        notification.setNotifier(comment.getCommentator());
+        notification.setNotifierName(notifierName);
+        notification.setOuterid(outerId);
+        notification.setOuterTitle(outerTitle);
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {

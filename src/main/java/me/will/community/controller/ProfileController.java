@@ -2,6 +2,7 @@ package me.will.community.controller;
 
 import me.will.community.dto.PaginationDTO;
 import me.will.community.model.User;
+import me.will.community.service.NotificationService;
 import me.will.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ public class ProfileController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable("action") String action,
                           Model model,
@@ -36,14 +40,21 @@ public class ProfileController {
 
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
-            model.addAttribute("sectionName", "My Questions");
+            model.addAttribute("sectionName", "我的问题");
+
+            PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
+            model.addAttribute("pagination", paginationDTO);
         } else if ("replies".equals(action)) {
             model.addAttribute("section", "replies");
-            model.addAttribute("sectionName", "Newest Reply");
+            model.addAttribute("sectionName", "最新回复");
+
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            model.addAttribute("pagination", paginationDTO);
+
+            Long unreadCount = notificationService.unreadCount(user.getId());
+            model.addAttribute("unreadCount", unreadCount);
         }
 
-        PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination", paginationDTO);
 
         return "profile";
     }

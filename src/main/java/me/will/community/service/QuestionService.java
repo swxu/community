@@ -60,7 +60,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         paginationDTO.setPagination(totalPage, page);
         return paginationDTO;
     }
@@ -75,7 +75,7 @@ public class QuestionService {
         // handle exception
         page = (page < 1) ? 1 : ((page > totalPage) ? totalPage : page);
 
-        Integer offset = size * (page - 1);
+        int offset = size * (page - 1);
 
         QuestionExample example = new QuestionExample();
         example.createCriteria()
@@ -91,7 +91,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList); /* Setter method */
+        paginationDTO.setData(questionDTOList); /* Setter method */
         paginationDTO.setPagination(totalPage, page);
         return paginationDTO;
     }

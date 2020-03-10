@@ -32,7 +32,7 @@
                       style="font-weight: bold"> Discuss</span>
             </h2>
             <hr>
-            <div class="media" th:each="question : ${pagination.questions}">
+            <div class="media" th:each="question : ${pagination.data}">
                 <div class="media-left">
                     <a href="#">
                         <img class="media-object img-rounded"
@@ -43,7 +43,6 @@
                     <h4 class="media-heading">
                         <a th:href="@{'question/' + ${question.id}}" th:text="${question.title}"></a>
                     </h4>
-                    <span th:text="${question.description}"></span><br>
                     <span class="text-desc">
                         <span th:text="${question.commentCount}"></span> 个回复 •
                         <span th:text="${question.viewCount}"></span> 次浏览 •
