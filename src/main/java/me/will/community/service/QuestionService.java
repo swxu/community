@@ -53,10 +53,6 @@ public class QuestionService {
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
 
-//        if (StringUtils.isNotBlank(tag)) {
-//
-//        }
-
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         Integer totalPage = (totalCount % size == 0) ? (totalCount / size) : ((totalCount / size) + 1);
         // handle exception
