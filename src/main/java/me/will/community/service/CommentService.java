@@ -110,9 +110,9 @@ public class CommentService {
                                     String notifierName,
                                     Long outerId, String outerTitle,
                                     NotificationTypeEnum notificationType) {
-//        if (receiver.equals(comment.getCommentator())) {
-//            return;
-//        }
+        if (receiver.equals(comment.getCommentator())) {
+            return;
+        }
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(notificationType.getType());

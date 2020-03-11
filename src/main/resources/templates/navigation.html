@@ -30,7 +30,7 @@
                     <li th:if="${session.user != null}">
                         <a href="/publish">提问</a>
                     </li>
-                    <li>
+                    <li th:if="${session.user != null}">
                         <a href="/profile/replies">通知
                             <span class="badge"
                                   th:if="${session.unreadCount != null && session.unreadCount > 0}"
