@@ -49,8 +49,9 @@
                         </ul>
                     </li>
                     <li th:unless="${session.user != null}">
-                        <a href="https://github.com/login/oauth/authorize?client_id=85cfd8da29006b0b77db&redirect_uri=http://localhost:8999/callback&scope=user&state=1">Log
-                            in</a>
+                        <a th:href="@{https://github.com/login/oauth(client_id='85cfd8da29006b0b77db', redirect_uri=${#httpServletRequest.getRequestURL()+'callback'}, scope=user, state=1)}">
+                            Log in
+                        </a>
                     </li>
                 </ul>
             </div>
