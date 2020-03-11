@@ -1,5 +1,6 @@
 package me.will.community.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import me.will.community.dto.AccessTokenDTO;
 import me.will.community.dto.GithubUser;
 import me.will.community.model.User;
@@ -22,6 +23,7 @@ import java.util.UUID;
  */
 
 @Controller
+@Slf4j
 public class AuthorizeController {
 
     @Autowired
@@ -67,6 +69,7 @@ public class AuthorizeController {
             /*
             Failed to log in, re-login
              */
+            log.error("AuthorizeController.callback: get github user error, {}", githubUser);
             return "redirect:/";
         }
     }

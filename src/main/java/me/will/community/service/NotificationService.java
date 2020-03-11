@@ -1,5 +1,6 @@
 package me.will.community.service;
 
+import lombok.extern.slf4j.Slf4j;
 import me.will.community.dto.NotificationDTO;
 import me.will.community.dto.PaginationDTO;
 import me.will.community.enums.NotificationStatusEnum;
@@ -24,6 +25,7 @@ import java.util.Objects;
  */
 
 @Service
+@Slf4j
 public class NotificationService {
 
     @Autowired
@@ -76,10 +78,12 @@ public class NotificationService {
     public NotificationDTO read(Long id, User user) {
         Notification notification = notificationMapper.selectByPrimaryKey(id);
         if (notification == null) {
+            log.error("NotificationService.read: get notification error, {}", notification);
             throw new CustomException(CustomErrorCode.NOTIFICATION_NOT_FOUND);
         }
 
         if (!Objects.equals(notification.getReceiver(), user.getId())) {
+            log.error("NotificationService.read: notification user id error, {}", notification);
             throw new CustomException(CustomErrorCode.READ_NOTIFICATION_FAILED);
         }
 

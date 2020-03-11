@@ -1,5 +1,6 @@
 package me.will.community.service;
 
+import lombok.extern.slf4j.Slf4j;
 import me.will.community.dto.PaginationDTO;
 import me.will.community.dto.QuestionDTO;
 import me.will.community.dto.QuestionQueryDTO;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
+@Slf4j
 public class QuestionService {
 
     @Autowired
@@ -112,6 +114,7 @@ public class QuestionService {
         Question question = questionMapper.selectByPrimaryKey(id);
 
         if (question == null) {
+            log.error("QuestionService.getById: get question error, {}", question);
             throw new CustomException(CustomErrorCode.QUESTION_NOT_FOUND);
         }
 
@@ -148,6 +151,7 @@ public class QuestionService {
 
             // 更新时，问题可能已经不存在了，因此需要抛异常
             if (updated != 1) {
+                log.error("QuestionService.createOrUpdate: update question error, {}", updated);
                 throw new CustomException(CustomErrorCode.QUESTION_NOT_FOUND);
             }
         }

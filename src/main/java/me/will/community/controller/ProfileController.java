@@ -55,9 +55,7 @@ public class ProfileController {
             model.addAttribute("unreadCount", unreadCount);
         }
 
-
         return "profile";
     }
-
 
 }

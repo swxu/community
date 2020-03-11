@@ -1,5 +1,6 @@
 package me.will.community.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import me.will.community.dto.CommentCreateDTO;
 import me.will.community.dto.CommentDTO;
 import me.will.community.dto.ResultDTO;
@@ -21,6 +22,7 @@ import java.util.List;
  */
 
 @Controller
+@Slf4j
 public class CommentController {
 
     @Autowired
@@ -33,10 +35,12 @@ public class CommentController {
 
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
+            log.error("CommentController.post: get user error, {}", user);
             return ResultDTO.errorOf(CustomErrorCode.NO_LOGIN);
         }
 
         if (commentCreateDTO == null || StringUtils.isBlank(commentCreateDTO.getContent())) {
+            log.error("CommentController.post: create comment error, {}", commentCreateDTO);
             return ResultDTO.errorOf(CustomErrorCode.COMMENT_IS_EMPTY);
         }
 
@@ -62,4 +66,3 @@ public class CommentController {
     }
 
 }
-

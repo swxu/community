@@ -1,5 +1,6 @@
 package me.will.community.advice;
 
+import lombok.extern.slf4j.Slf4j;
 import me.will.community.dto.ResultDTO;
 import me.will.community.exception.CustomErrorCode;
 import me.will.community.exception.CustomException;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @ControllerAdvice
+@Slf4j
 public class CustomExceptionHandler {
 
     @ExceptionHandler(Exception.class)
@@ -29,16 +31,20 @@ public class CustomExceptionHandler {
             // return json data
 
             if (e instanceof CustomException) {
+                log.error("CustomExceptionHandler.handle, {}", e);
                 return ResultDTO.errorOf((CustomException) e);
             } else {
+                log.error("CustomExceptionHandler.handle, {}", e);
                 return ResultDTO.errorOf(CustomErrorCode.SYS_ERROR);
             }
         } else {
             // redirect to error page
 
             if (e instanceof CustomException) {
+                log.error("CustomExceptionHandler.handle, {}", e);
                 model.addAttribute("message", e.getMessage());
             } else {
+                log.error("CustomExceptionHandler.handle, {}", e);
                 model.addAttribute("message", CustomErrorCode.SYS_ERROR.getMessage());
             }
             return new ModelAndView("error");

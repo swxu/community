@@ -1,6 +1,7 @@
 package me.will.community.provider;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import me.will.community.dto.AccessTokenDTO;
 import me.will.community.dto.GithubUser;
 import okhttp3.*;
@@ -13,6 +14,7 @@ import java.io.IOException;
  */
 
 @Component
+@Slf4j
 public class GithubProvider {
 
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
@@ -31,7 +33,7 @@ public class GithubProvider {
             String token = string.split("&")[0].split("=")[1];
             return token;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("GithubProvider.getAccessToken: get access token error, {}", request);
         }
         return null;
     }
@@ -49,6 +51,7 @@ public class GithubProvider {
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
             return githubUser;
         } catch (IOException e) {
+            log.error("GithubProvider.getUser: get user error, {}", request);
         }
         return null;
     }
