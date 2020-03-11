@@ -1,5 +1,11 @@
 ## Green Hand Community
 
+## Deployment
+- Git
+- JDK
+- Maven
+- MySQL
+
 ## Resource
 - [Spring Document](https://spring.io/guides)
 - [Spring Web Guides](https://spring.io/guides/gs/serving-web-content)
