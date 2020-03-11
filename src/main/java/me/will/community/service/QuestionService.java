@@ -2,6 +2,7 @@ package me.will.community.service;
 
 import me.will.community.dto.PaginationDTO;
 import me.will.community.dto.QuestionDTO;
+import me.will.community.dto.QuestionQueryDTO;
 import me.will.community.exception.CustomErrorCode;
 import me.will.community.exception.CustomException;
 import me.will.community.mapper.QuestionExtMapper;
@@ -37,22 +38,38 @@ public class QuestionService {
     @Autowired
     QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+    public PaginationDTO list(String search, Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
 
+        if (StringUtils.isNotBlank(search)) {
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags)
+                    .filter(StringUtils::isNotBlank)
+                    .map(t->t.replace("+", "").replace("*", "").replace("?", "?"))
+                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.joining("|"));
+
+        }
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+
+//        if (StringUtils.isNotBlank(tag)) {
+//
+//        }
+
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         Integer totalPage = (totalCount % size == 0) ? (totalCount / size) : ((totalCount / size) + 1);
         // handle exception
         page = (page < 1) ? 1 : ((page > totalPage) ? totalPage : page);
+        paginationDTO.setPagination(totalPage, page);
 
-        Integer offset = size * (page - 1);
+        int offset = size * (page - 1);
 
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(
-                questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
 
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-        PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -61,7 +78,6 @@ public class QuestionService {
             questionDTOList.add(questionDTO);
         }
         paginationDTO.setData(questionDTOList);
-        paginationDTO.setPagination(totalPage, page);
         return paginationDTO;
     }
 
