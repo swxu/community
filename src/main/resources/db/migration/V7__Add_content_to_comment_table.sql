@@ -1,3 +1,3 @@
-alter table COMMENT
+alter table comment
 	add content varchar(1024) not null;
 
