@@ -11,4 +11,4 @@ create table notification
 	status          int default 0 not null,
 	constraint notification_pk
 		primary key (id)
-);
+)character set = utf8;

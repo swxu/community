@@ -10,4 +10,4 @@ create table user
     gmt_modified bigint not null,
     constraint user_pk
         primary key (id)
-);
+)character set = utf8;

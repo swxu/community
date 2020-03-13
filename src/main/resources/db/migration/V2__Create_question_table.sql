@@ -12,4 +12,4 @@ create table question
 	tag             varchar(256) not null,
 	constraint question_pk
 		primary key (id)
-);
+)character set = utf8;

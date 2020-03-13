@@ -6,6 +6,14 @@
 - Maven
 - MySQL
 
+配置 Maven 数据库连接时在 ```~/.m2/settings.xml``` 里配置 ```production``` 环境.<br>
+部署时需要复制一份 ```application.properties``` 并接上 ```-production```的后缀使用下面的命令运行.
+```shell script
+$ ps aux | grep java
+$ mvn clean compile flyway:migrate package -P production
+$ setsid java -jar -Dspring.profiles.active=production target/community-0.0.1-SNAPSHOT.jar
+```
+
 ## Resource
 - [Spring Document](https://spring.io/guides)
 - [Spring Web Guides](https://spring.io/guides/gs/serving-web-content)

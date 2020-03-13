@@ -30,7 +30,7 @@ public class TagCache {
             "sql", "oracle", "nosql memcached", "sqlserver", "postgresql", "sqlite"));
 
     private final static List<String> DEV_TOOLS = new ArrayList<>(Arrays.asList("git", "github",
-            "visual-studio-code", "vim", "sublime-text", "xcode intellij-idea", "eclipse",
+            "visual-studio-code", "vim", "sublime-text", "xcode", "intellij-idea", "eclipse",
             "maven", "ide", "svn", "visual-studio", "atom emacs", "textmate", "hg"));
 
     public static List<TagDTO> get() {

@@ -11,4 +11,4 @@ create table comment
 	comment_count   int default 0,
 	constraint comment_pk
 		primary key (id)
-);
+)character set = utf8;
