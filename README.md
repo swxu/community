@@ -14,6 +14,21 @@ $ mvn clean compile flyway:migrate package -P production
 $ setsid java -jar -Dspring.profiles.active=production target/community-0.0.1-SNAPSHOT.jar
 ```
 
+使用 ```SHOW VARIABLES like '%char%';``` 检查 MySQL 是否支持中文, 若不支持直接修改 ```/etc/mysql/my.cnf```, 加入以下配置(注意顺序);
+``` /etc/mysql/my.cnf
+
+[mysqld]
+lower_case_table_names=1
+character-set-server=utf8
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+```
+
 ## Resource
 - [Spring Document](https://spring.io/guides)
 - [Spring Web Guides](https://spring.io/guides/gs/serving-web-content)
