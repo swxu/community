@@ -57,6 +57,7 @@ public class QuestionService {
 
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         Integer totalPage = (totalCount % size == 0) ? (totalCount / size) : ((totalCount / size) + 1);
+        totalPage = totalPage == 0 ? 1 : totalPage;
         // handle exception
         page = (page < 1) ? 1 : ((page > totalPage) ? totalPage : page);
         paginationDTO.setPagination(totalPage, page);
