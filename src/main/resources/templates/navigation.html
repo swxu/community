@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <body>
 
 <div th:fragment="nav">
@@ -26,13 +27,13 @@
 
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li th:if="${session.user != null}">
+                    <li>
                         <a href="/publish">提问</a>
                     </li>
-                    <li th:if="${session.user != null}">
+                    <li>
                         <a href="/profile/replies">通知
                             <span class="badge"
-                                  th:if="${session.unreadCount != null && session.unreadCount > 0}"
+                                  th:if="${session.user != null && session.unreadCount != null && session.unreadCount > 0}"
                                   th:text="${session.unreadCount}"></span>
                         </a>
                     </li>
